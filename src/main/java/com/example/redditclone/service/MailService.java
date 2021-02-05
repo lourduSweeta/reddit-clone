@@ -19,7 +19,6 @@ import lombok.extern.slf4j.Slf4j;
 public class MailService {
 	
 	private final JavaMailSender mailSender;
-	private final MailContentBuilder mailContentBuilder;
 	
 	@Async
 	public void sendMail(NotificationEmail notificationEmail)
@@ -29,12 +28,12 @@ public class MailService {
 			mimeMessageHelper.setFrom("redditClone@email.com");
 			mimeMessageHelper.setTo(notificationEmail.getRecipient());
 			mimeMessageHelper.setSubject(notificationEmail.getSubject());
-			mimeMessageHelper.setText(mailContentBuilder.build(notificationEmail.getBody()));
+			mimeMessageHelper.setText(notificationEmail.getBody());
 		};
 		
 		try {
 			mailSender.send(messagePreparator);
-			log.info("Activation mail sent !");
+			log.info("Mail sent Successfully !");
 		}
 		catch (MailException exe) {
 			throw new SpringRedditException ("Exception occured when sending mail to "+notificationEmail.getRecipient());

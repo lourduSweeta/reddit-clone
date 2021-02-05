@@ -37,6 +37,8 @@ public class AuthService {
 	
 	private final VerificationTokenRepository verificationTokenRepository;
 	
+	private final MailContentBuilder mailContentBuilder;
+	
 	private final MailService mailService;
 	
 	private final AuthenticationManager authenticationManager;
@@ -56,11 +58,11 @@ public class AuthService {
 		userRepository.save(user);
 		
 		String token = generateVerificationToken(user);
-		mailService.sendMail(new NotificationEmail("Please Activate your account",
-				user.getEmail(),
-				"Thank you for signing up to Spring Reddit Clone Application"
+		String message = mailContentBuilder.build("Thank you for signing up to Spring Reddit Clone Application"
 				+ "Please click below link to activate your account: "
-				+ Constants.ACTIVATION_EMAIL+"/"+token));
+				+ Constants.ACTIVATION_EMAIL+"/"+token);
+		mailService.sendMail(new NotificationEmail("Please Activate your account",
+				user.getEmail(), message));
 	}
 	
 
